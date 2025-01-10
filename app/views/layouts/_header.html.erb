@@ -1,0 +1,109 @@
+<style>
+  .header-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    justify-content: space-between; /* Ajusta la distribución horizontal */
+  }
+
+  .navbar-nav.ms-3 {
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+  }
+
+  .nav-link.d-flex {
+    display: flex;
+    align-items: center; /* Centra el icono y el texto dentro del enlace */
+  }
+
+  .bi-person-circle {
+    font-size: 1.5rem; /* Ajusta el tamaño del ícono si es necesario */
+    line-height: 1; /* Asegura que esté alineado verticalmente */
+  }
+</style>
+
+
+<header>
+  <!-- Barra superior para Home + Categorías -->
+  <nav class="navbar navbar-dark" style="background-color: #000;">
+    <div class="container d-flex justify-content-center">
+      <ul class="navbar-nav flex-row gap-3">
+        <!-- Link a Home -->
+        <li class="nav-item">
+          <%= link_to 'Home', root_path, class: 'nav-link text-light' %>
+        </li>
+
+        <!-- Sección de Categorías (ejemplo iterando sobre Category.all) -->
+        <% Category.all.each do |category| %>
+          <li class="nav-item">
+            <%= link_to category.name, category_path(category), class: 'nav-link text-light' %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+
+  
+  <!-- Barra principal con logo, buscador, subir video, usuario -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #000;">
+    <div class="container">
+      <!-- Logo: RailsHub -->
+      <!-- Logo: RailsHub -->
+      <a class="navbar-brand" href="/" style="display: flex; align-items: center; text-decoration: none;">
+        <span style="color: white; font-weight: bold; font-size: 1.5rem;">Rails</span>
+        <span style="background-color: #f90; color: black; font-weight: bold; font-size: 1.5rem; padding: 0 8px; border-radius: 4px; margin-left: 5px;">hub</span>
+      </a>
+
+
+      <!-- Botón hamburguesa (no muestra nada adicional por ahora) -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavMain" aria-controls="navbarNavMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavMain">
+        <!-- Contenedor del buscador en un ul (opcional) -->
+        <ul class="navbar-nav w-100">
+          <!-- Elemento que ocupará todo el ancho (w-100) -->
+          <li class="nav-item w-100">
+            <!-- Barra de búsqueda ocupando todo el espacio con flex -->
+            <form class="d-flex w-100" role="search">
+              <!-- flex-grow con flex-fill para forzar que ocupe el ancho disponible -->
+              <input class="form-control me-2 flex-fill" type="search" placeholder="Buscar" aria-label="Search">
+              <button class="btn btn-highlight" type="submit">Buscar</button>
+            </form>
+          </li>
+        </ul>
+
+        <!-- Menú de la derecha: Subir Video + Perfil/Ingresar -->
+        <ul class="navbar-nav ms-3">
+          <!-- Botón para subir video -->
+          <li class="nav-item">
+            <a class="nav-link" href="/upload">Subir Video</a>
+          </li>
+
+          <!-- Ícono de usuario: 'Ingresar' o 'Perfil' -->
+          <% if authenticated? %>
+            <!-- Si el usuario está autenticado -->
+            <li class="nav-item">
+              <%= link_to '#', class: 'nav-link d-flex align-items-center' do %>
+                <i class="bi bi-person-circle me-2"></i>
+                Perfil
+              <% end %>
+            </li>
+          <% else %>
+            <!-- Si NO está autenticado -->
+            <li class="nav-item">
+              <%= link_to '/users/sign_in', class: 'nav-link d-flex align-items-center' do %>
+                <i class="bi bi-person-circle me-2"></i>
+                Ingresar
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+
+
+      </div>
+    </div>
+  </nav>
+
+
+</header>

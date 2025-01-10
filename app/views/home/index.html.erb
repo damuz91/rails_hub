@@ -1,0 +1,5 @@
+<div class="row">
+  <% @videos.each_with_index do |video, i| %>
+    <%= render 'home/video_card', {video: video, i: i} %>
+  <% end %>
+</div>

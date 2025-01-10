@@ -1,0 +1,28 @@
+<div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+  <div class="card bg-dark text-white border-0">
+    
+    <%= link_to video_path(video) do %>
+      <img src="https://picsum.photos/300/200?random=<%= i %>" class="card-img-top video-thumbnail" alt="Video Thumbnail">
+    <% end %>
+
+    <div class="card-img-overlay d-flex flex-column justify-content-between">
+      <div>
+        <!-- Información adicional como el idioma y duración -->
+        <span class="badge bg-secondary"><%= video.category.name %></span>
+        <span class="badge bg-dark float-end"><%= video.duration rescue "0:00" %></span>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="d-flex align-items-center mb-2">
+        <h6 class="m-0 text-truncate"><%= video.user.username rescue 'Admin' %> <i class="bi bi-check-circle-fill text-primary"></i></h6>
+      </div>
+      <p class="card-text text-truncate mb-2"><%= video.title %></p>
+      <p class="card-text text-truncate"><%= video.description %></p>
+      <div class="d-flex justify-content-between">
+        <small><%= humanized_number(video.views_count) rescue 0 %> Views</small>
+        <small><%= humanized_number(video.likes_count) %> Likes</small>
+      </div>
+    </div>
+  </div>
+</div>
