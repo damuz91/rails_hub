@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   root 'home#index'
   resources :categories, only: [:index, :show]
-  resources :videos, only: [:index, :show]
+  resources :videos, only: [:index, :show] do
+    resources :comments, only: [:create, :destroy]
+  end
   resource :session
   resource :registration, only: [:new, :create]
   resources :passwords, param: :token
