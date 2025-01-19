@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow" style="background-color: #000; border: 1px solid #333;">
+        <div class="card-header text-center" style="background-color: #333; color: #fff;">
+          <h4>Crear Cuenta</h4>
+        </div>
+        <div class="card-body">
+          <% if flash[:alert] %>
+            <div class="alert alert-danger" role="alert" style="background-color: #330000; color: #ff6666; border: 1px solid #ff3333;">
+              <%= flash[:alert] %>
+            </div>
+          <% end %>
+          <% if flash[:notice] %>
+            <div class="alert alert-success" role="alert" style="background-color: #003300; color: #66ff66; border: 1px solid #33ff33;">
+              <%= flash[:notice] %>
+            </div>
+          <% end %>
+
+          <%= form_with model: @user, url: registration_path, class: "needs-validation" do |form| %>
+            <div class="mb-3">
+              <%= form.label :username, "Nombre de Usuario", class: "form-label", style: "color: #fff;" %>
+              <%= form.text_field :username, class: "form-control", required: true, autofocus: true, autocomplete: "username", placeholder: "Ingresa tu nombre de usuario", style: "background-color: #222; color: #fff; border: 1px solid #444;" %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :email_address, "Correo electrónico", class: "form-label", style: "color: #fff;" %>
+              <%= form.email_field :email_address, class: "form-control", required: true, autocomplete: "email", placeholder: "Ingresa tu correo electrónico", style: "background-color: #222; color: #fff; border: 1px solid #444;" %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :password, "Contraseña", class: "form-label", style: "color: #fff;" %>
+              <%= form.password_field :password, class: "form-control", required: true, autocomplete: "new-password", placeholder: "Crea tu contraseña", maxlength: 72, style: "background-color: #222; color: #fff; border: 1px solid #444;" %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :password_confirmation, "Confirmar Contraseña", class: "form-label", style: "color: #fff;" %>
+              <%= form.password_field :password_confirmation, class: "form-control", required: true, autocomplete: "new-password", placeholder: "Confirma tu contraseña", maxlength: 72, style: "background-color: #222; color: #fff; border: 1px solid #444;" %>
+            </div>
+            <div class="d-grid">
+              <%= form.submit "Registrarse", class: "btn", style: "background-color: #ff9900; color: #000; border: none;" %>
+            </div>
+          <% end %>
+
+          <div class="text-center mt-3">
+            <%= link_to "¿Ya tienes una cuenta? Inicia sesión", new_session_path, style: "color: #ff9900; text-decoration: none;" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

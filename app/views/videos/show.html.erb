@@ -42,7 +42,7 @@
           <button type="submit" class="btn btn-highlight">Publicar</button>
         </form>
       <% else %>
-        <p>Debes <a href="/users/sign_in">iniciar sesión</a> para dejar un comentario.</p>
+        <p>Debes <a href="<%= new_session_path %>">iniciar sesión</a> para dejar un comentario.</p> 
       <% end %>
 
       <!-- Lista de comentarios -->
