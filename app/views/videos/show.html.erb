@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="embed-responsive embed-responsive-16by9">
         <video class="w-100" controls>
-          <source src="<%=  %>" type="video/mp4">
+          <source src="<%= @video.file_url %>" type="video/mp4">
           Tu navegador no soporta el reproductor de video.
         </video>
       </div>
@@ -15,13 +15,13 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <h2 class="text-highlight"><%= @video.title %></h2>
-      <p class="text-muted">Publicado por <strong><%= @video.user.email_address %></strong> el <%= @video.created_at.strftime("%d de %B de %Y") %></p>
+      <p class="">Publicado por <strong><%= @video.user.email_address %></strong> el <%= @video.created_at.strftime("%d de %B de %Y") %></p>
       <p><%= @video.description %></p>
     </div>
     <div class="col-md-4 text-center">
       <div class="d-flex justify-content-center align-items-center gap-3">
-        <button class="btn btn-highlight btn-lg">
-          <i class="bi bi-hand-thumbs-up"></i> Me gusta (<%= @video.likes_count rescue 0 %>)
+        <button id="like-button" class="btn btn-highlight btn-lg" data-url="<%= increment_likes_video_path(@video) %>">
+          <i class="bi bi-hand-thumbs-up"></i> Me gusta (<span id="likes-count"><%= @video.likes_count %></span>)
         </button>
       </div>
     </div>
@@ -30,14 +30,19 @@
   <!-- Sección de comentarios -->
   <div class="row mt-5">
     <div class="col-12">
-      <h3 class="text-highlight">Comentarios (<%= @video.comments.count rescue 0 %>)</h3>
+      <h3 class="text-highlight">Comentarios (<%= @video.comments.count %>)</h3>
+      <% if flash[:notice] %>
+        <div class="alert alert-success"><%= flash[:notice] %></div>
+      <% elsif flash[:alert] %>
+        <div class="alert alert-danger"><%= flash[:alert] %></div>
+      <% end %>
 
       <!-- Formulario para agregar comentario -->
       <% if authenticated? %>
         <form action="<%= video_comments_path(@video) %>" method="post">
           <%= csrf_meta_tags %>
           <div class="mb-3">
-            <textarea class="form-control" name="comment[content]" rows="3" placeholder="Escribe un comentario..." required></textarea>
+            <textarea class="form-control" name="comment[body]" rows="3" placeholder="Escribe un comentario..." required></textarea>
           </div>
           <button type="submit" class="btn btn-highlight">Publicar</button>
         </form>
@@ -47,16 +52,83 @@
 
       <!-- Lista de comentarios -->
       <div class="mt-4">
-        <% [].each do |comment| %>
+        <% @video.comments.order(created_at: :desc).each do |comment| %>
           <div class="mb-3">
-            <div class="d-flex align-items-center">
-              <strong><%= comment.user.username %></strong>
-              <span class="text-muted ms-2"><%= time_ago_in_words(comment.created_at) %> atrás</span>
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <strong><%= comment.user.username %></strong>
+                <span class="ms-2">Hace <%= time_ago_in_words(comment.created_at) %></span>
+              </div>
+              <% if current_user == comment.user %>
+                <form action="<%= video_comment_path(@video, comment) %>" method="post" style="display:inline;">
+                  <%= hidden_field_tag :_method, "delete" %>
+                  <%= csrf_meta_tags %>
+                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+              <% end %>
             </div>
-            <p class="mb-0"><%= comment.content %></p>
+            <p class="mb-0"><%= comment.body %></p>
           </div>
         <% end %>
       </div>
     </div>
   </div>
+
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const likeButton = document.getElementById("like-button");
+
+    if (likeButton) {
+      likeButton.addEventListener("click", () => {
+        const url = likeButton.dataset.url;
+
+        // Agregar la clase de animación
+        likeButton.classList.add("animated");
+
+        // Remover la clase después de la animación
+        setTimeout(() => {
+          likeButton.classList.remove("animated");
+        }, 300); // Duración de la animación en ms
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const likesCount = document.getElementById("likes-count");
+            likesCount.textContent = data.likes_count;
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Efecto de animación para el botón */
+  @keyframes scale-up {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+      background-color: #ffe066;
+      box-shadow: 0 0 10px #ffe066;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .btn-highlight.animated {
+    animation: scale-up 0.3s ease-in-out;
+  }
+
+</style>
