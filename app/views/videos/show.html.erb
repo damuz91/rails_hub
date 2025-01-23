@@ -53,24 +53,22 @@
       <!-- Lista de comentarios -->
       <div class="mt-4">
         <% @video.comments.order(created_at: :desc).each do |comment| %>
-          <div class="mb-3">
+          <div class="mb-3" data-controller="comments" data-comments-url="<%= video_comment_path(@video, comment) %>">
             <div class="d-flex align-items-center justify-content-between">
               <div>
                 <strong><%= comment.user.username %></strong>
                 <span class="ms-2">Hace <%= time_ago_in_words(comment.created_at) %></span>
               </div>
               <% if current_user == comment.user %>
-                <form action="<%= video_comment_path(@video, comment) %>" method="post" style="display:inline;">
-                  <%= hidden_field_tag :_method, "delete" %>
-                  <%= csrf_meta_tags %>
-                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
+                <button type="button" data-action="comments#delete" class="btn btn-danger btn-sm">Eliminar</button>
               <% end %>
             </div>
             <p class="mb-0"><%= comment.body %></p>
           </div>
         <% end %>
       </div>
+
+      
     </div>
   </div>
 
@@ -132,6 +130,11 @@
 
   .btn-highlight.animated {
     animation: scale-up 0.3s ease-in-out;
+  }
+
+  .comment-removing {
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
 </style>

@@ -14,8 +14,11 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment.destroy
-    redirect_to video_path(@comment.video), notice: "Comentario eliminado exitosamente."
+    if @comment.destroy
+      render json: { message: "Comentario eliminado" }, status: :ok
+    else
+      render json: { error: "No se pudo eliminar el comentario" }, status: :unprocessable_entity
+    end
   end
 
   private
