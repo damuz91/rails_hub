@@ -15,7 +15,7 @@
   <div class="row mt-4">
     <div class="col-md-8">
       <h2 class="text-highlight"><%= @video.title %></h2>
-      <p class="">Publicado por <strong><%= @video.user.email_address %></strong> el <%= @video.created_at.strftime("%d de %B de %Y") %></p>
+      <p class="">Publicado por <strong><%= @video.user.username %></strong> el <%= @video.created_at.strftime("%d de %B de %Y") %></p>
       <p><%= @video.description %></p>
     </div>
     <div class="col-md-4 text-center">
@@ -76,40 +76,43 @@
 
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const likeButton = document.getElementById("like-button");
+<% content_for :head_scripts do %>
+  <script>
+    document.addEventListener("turbo:load", () => {
+        console.log("DOM cargado");
+        const likeButton = document.getElementById("like-button");
 
-    if (likeButton) {
-      likeButton.addEventListener("click", () => {
-        const url = likeButton.dataset.url;
+        if (likeButton) {
+          likeButton.addEventListener("click", () => {
+            const url = likeButton.dataset.url;
 
-        // Agregar la clase de animación
-        likeButton.classList.add("animated");
+            // Agregar la clase de animación
+            likeButton.classList.add("animated");
 
-        // Remover la clase después de la animación
-        setTimeout(() => {
-          likeButton.classList.remove("animated");
-        }, 300); // Duración de la animación en ms
+            // Remover la clase después de la animación
+            setTimeout(() => {
+              likeButton.classList.remove("animated");
+            }, 300); // Duración de la animación en ms
 
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const likesCount = document.getElementById("likes-count");
-            likesCount.textContent = data.likes_count;
-          })
-          .catch((error) => console.error("Error:", error));
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                const likesCount = document.getElementById("likes-count");
+                likesCount.textContent = data.likes_count;
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+        }
       });
-    }
-  });
-</script>
+  </script>
+<% end %>
 
 <style>
   /* Efecto de animación para el botón */
