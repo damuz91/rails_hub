@@ -1,0 +1,11 @@
+<h1>Resultados de búsqueda para "<%= params[:query] %>"</h1>
+
+<% if @videos.any? %>
+  <div class="row">
+    <% @videos.each_with_index do |video, i| %>
+      <%= render 'home/video_card', { video: video, i: i } %>
+    <% end %>
+  </div>
+<% else %>
+  <p>No se encontraron resultados.</p>
+<% end %>

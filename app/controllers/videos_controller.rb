@@ -1,7 +1,14 @@
 class VideosController < ApplicationController
   before_action :set_video, only: [:show, :increment_likes]
 
-  allow_unauthenticated_access only: [:show]
+  def search
+    if params[:query].present?
+      @videos = Video.where("title LIKE ? OR description LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
+    else
+      @videos = Video.all
+    end
+  end
+
   def show
   end
 

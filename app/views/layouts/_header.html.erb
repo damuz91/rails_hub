@@ -65,11 +65,10 @@
           <!-- Elemento que ocupará todo el ancho (w-100) -->
           <li class="nav-item w-100">
             <!-- Barra de búsqueda ocupando todo el espacio con flex -->
-            <form class="d-flex w-100" role="search">
-              <!-- flex-grow con flex-fill para forzar que ocupe el ancho disponible -->
-              <input class="form-control me-2 flex-fill" type="search" placeholder="Buscar" aria-label="Search">
-              <button class="btn btn-highlight" type="submit">Buscar</button>
-            </form>
+            <%= form_with url: search_videos_path, method: :get, class: 'd-flex w-100', local: true, role: 'search' do %>
+              <%= text_field_tag :query, params[:query], class: 'form-control me-2 flex-fill', placeholder: 'Buscar', aria: { label: 'Search' } %>
+              <%= submit_tag 'Buscar', class: 'btn btn-highlight' %>
+            <% end %>
           </li>
         </ul>
 
